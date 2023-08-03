@@ -3,58 +3,95 @@ Exploratory Data Analysis for Covid Data
 Data Set from Kaggle:
 https://www.kaggle.com/datasets/tohidkhanbagani/covid-19-deaths-and-vaccinations-dataset
 
-This dataset contains two files that provide detailed information on Covid-19 deaths and vaccinations worldwide. The first file contains data on the number of Covid-19 deaths, including total deaths and new deaths, across different locations and time periods. The second file contains data on Covid-19 vaccinations, including total vaccinations, people vaccinated, people fully vaccinated, and total boosters, across different locations and time periods. By analyzing this data, you can uncover insights into the global impact of Covid-19 and explore the relationship between vaccinations and deaths. This dataset is a valuable resource for researchers, data analysts, and anyone interested in understanding the ongoing pandemic.
 
-COVID DEATHS
+## Data Overview
 
-iso_code: The ISO 3166-1 alpha-3 code of the country or territory.
-continent: The continent of the location.
-location: The name of the country or territory.
-date: The date of the observation.
-population: The population of the country or territory.
-total_cases: The total number of confirmed cases of Covid-19.
-new_cases: The number of new confirmed cases of Covid-19.
-new_cases_smoothed: The 7-day smoothed average of new confirmed cases of Covid-19.
-total_deaths: The total number of deaths due to Covid-19.
-new_deaths: The number of new deaths due to Covid-19.
-new_deaths_smoothed: The 7-day smoothed average of new deaths due to Covid-19.
-total_cases_per_million: The total number of confirmed cases of Covid-19 per million people.
-new_cases_per_million: The number of new confirmed cases of Covid-19 per million people.
-new_cases_smoothed_per_million: The 7-day smoothed average of new confirmed cases of Covid-19 per million people.
-total_deaths_per_million: The total number of deaths due to Covid-19 per million people.
-new_deaths_per_million: The number of new deaths due to Covid-19 per million people.
-new_deaths_smoothed_per_million: The 7-day smoothed average of new deaths due to Covid-19 per million people.
-reproduction_rate: The estimated average number of people each infected person infects (the "R" number).
-icu_patients: The number of patients in intensive care units (ICU) with Covid-19 on the given date.
-icu_patients_per_million: The number of patients in intensive care units (ICU) with Covid-19 on the given date, per million people.
-hosp_patients: The number of patients in hospital with Covid-19 on the given date.
-hosp_patients_per_million: The number of patients in hospital with Covid-19 on the given date, per million people.
-weekly_icu_admissions: The weekly number of patients admitted to intensive care units (ICU) with Covid-19.
-weekly_icu_admissions_per_million: The weekly number of patients admitted to intensive care units (ICU) with Covid-19, per million people.
-weekly_hosp_admissions: The weekly number of patients admitted to hospital with Covid-19.
-weekly_hosp_admissions_per_million: The weekly number of patients admitted to hospital with Covid-19, per million people.
-COVID VACCINATIONS
+Data set provides information from 1/3/2020 to 4/12/2023 grouped by country about their performance through the pandemic tracking their infections, deaths, and vaccination data in addition to other economic indicators.
 
-total_tests: The total number of tests for Covid-19.
-new_tests: The number of new tests for Covid-19.
-total_tests_per_thousand: The total number of tests for Covid-19 per thousand people.
-new_tests_per_thousand: The number of new tests for Covid-19 per thousand people.
-new_tests_smoothed: The 7-day smoothed average of new tests for Covid-19.
-new_tests_smoothed_per_thousand: The 7-day smoothed average of new tests for Covid-19 per thousand people.
-positive_rate: The share of Covid-19 tests that are positive, given as a rolling 7-day average.
-tests_per_case: The number of tests conducted per confirmed case of Covid-19, given as a rolling 7-day average.
-tests_units: The units used by the location to report its testing data.
-total_vaccinations: The total number of doses of Covid-19 vaccines administered.
-people_vaccinated: The total number of people who have received at least one dose of a Covid-19 vaccine.
-people_fully_vaccinated: The total number of people who have received all doses prescribed by the vaccination protocol.
-total_boosters: The total number of booster doses administered (doses administered after the prescribed number of doses for full vaccination).
-new_vaccinations: The number of doses of Covid-19 vaccines administered on the given date.
-new_vaccinations_smoothed: The 7-day smoothed average of new doses of Covid-19 vaccines administered.
-total_vaccinations_per_hundred: The total number of doses of Covid-19 vaccines administered per hundred people in the total population.
-people_vaccinated_per_hundred: The total number of people who have received at least one dose of a Covid-19 vaccine per hundred people in the total population.
-people_fully_vaccinated_per_hundred: The total number of people who have received all doses prescribed by the vaccination protocol per hundred people in the total population.
-total_boosters_per_hundred: The total number of booster doses administered per hundred people in the total population.
-new_vaccinations_smoothed_per_million: The 7-day smoothed average of new doses of Covid-19 vaccines administered per million people in the total population.
-stringency_index: A composite measure based on nine response indicators including school closures, workplace closures, and travel bans, rescaled to a value from 0 to 100 (100 = strictest).
-population_density: The number of people divided by land area, measured in square kilometers.
-median_age: The median age of the population, UN projection for 2020.
+## EDA
+
+Conducted EDA trying to gain a sense of which countries performed worse in the covid
+pandemic based upon new cases smoothed per million.  "Smoothed" means a seven day average.  From the data set this allowed me to use a weekly average to calculate the intensity of new infections.  
+
+![Alt text](<images\New Cases Per Million.png>)
+
+This plot shows the severe spike in China following the reopening in late 2022 in addition to seasonal spikes in other parts of the world.  But infections are now the whole story, so I looked also at rate of deaths to identify significant comparisons.
+
+![Alt text](<images\New Deaths Per Millionj.png>)
+
+This plot shows a more complicated picture and I decided to look for correlations given the available data to find relationships between the total number of deaths per million and other indicators.  Here I build my initial hypothesis.
+
+## Hypothesis Test and Linear Regression Model
+
+H0: Vaccination rates do not lower the death rate in a country.
+
+HA: An increase in vaccination rates lowers the death rate in a country.
+
+
+![Alt text](<images\Total Deaths vs People Fully Vaccinated.png>)
+
+I find in my hypothesis test and my linear regression model the following values:
+
+Coefficient: 14.98
+p-value: 0.012
+
+This analysis suggests that a unit increase in vaccinations equates to a 14.98 increase in deaths.
+
+However, the p-value of 0.012 suggests that I can reject the null hypothesis.
+
+This contradictory evidence supports looking at other factors for analysis.
+
+## Additional Analysis
+
+I looked next to identify correlations between other factors related to covid deaths.
+
+In ful:
+![Alt text](<images\Correlation Matrix Full.png>)
+
+Reduced to relevent data fields. 
+
+![Alt text](<images\Correlation Matrix Narrowed.png>)
+
+A surprise in my analysis is that Total Deaths per Million was better predicted by other factors.
+
+GDP:
+
+![Alt text](<images\Deaths v GDP.png>)
+
+Median Age:
+
+![Alt text](<images\Total Deaths per Million vs. Median Age.png>)
+
+Human Development Index:
+
+![Alt text](<images\Total Deaths per Million vs. HDI.png>)
+
+Life Expectancy:
+
+![Alt text](<images\Total Deaths vs. Life Expectancy.png>)
+
+Percent aged 65 or older:
+
+![Alt text](<images\Total Deaths vs Percent Aged 65 or Older.png>)
+
+There are strong correlations with all of these factors.  But median age, HDI, Life Expectancy, and 65+ populations, correlate with wealthier and older societies which were also more likely to receive vaccinations.
+
+GDP:
+
+![Alt text](<images\Vaccinated v GDP.png>)
+
+Median age:
+
+![Alt text](<images\Vaccinated v Median Age.png>)
+
+Human Development Index:
+
+![Alt text](<images\Vaccinated v HDI.png>)
+
+Life Expectancy:
+
+![Alt text](<images\Vaccinated v Life Expectancy.png>)
+
+Percent aged 65 or older:
+
+![Alt text](<images\Vaccinated v aged 65.png>)
