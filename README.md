@@ -45,7 +45,8 @@ This contradictory evidence supports looking at other factors for analysis.
 
 I looked next to identify correlations between other factors related to covid deaths.
 
-In ful:
+In full:
+
 ![Alt text](<images\Correlation Matrix Full.png>)
 
 Reduced to relevent data fields. 
