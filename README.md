@@ -96,3 +96,17 @@ Life Expectancy:
 Percent aged 65 or older:
 
 ![Alt text](<images\Vaccinated v aged 65.png>)
+
+## Conclusions
+
+The linear regression model suggests that covid vaccines increased the rates of death.
+
+However, vaccination rates are also consistent with higher deaths according to other factors.  Death rates and vaccination rates are both positively correlated with wealthier, more developed, and older societies.  This masks the relationship between vaccination rates and total deaths per million.
+
+## Way Forward
+
+Assess pandemic intensity overtime as opposed to the total may help to measure the effectiveness of country/regional responses.
+
+Measure according to excess mortality may produce more accurate results given the likelihood of underreporting in poorer, less developed, or autocratic societies.
+
+Missing from this data set is any data about the age of the dead.  Understanding this information would provide more nuance to vulnerable populations and determining how well countries responded to the pandemic.
