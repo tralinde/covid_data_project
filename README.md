@@ -32,24 +32,24 @@ HA: An increase in vaccination rates lowers the death rate in a country.
 
 I find in my hypothesis test and my linear regression model the following values:
 
-Coefficient: 14.98
-p-value: 0.012
+Coefficient: 16.98
+p-value: 0.002
 
-This analysis suggests that a unit increase in vaccinations equates to a 14.98 increase in deaths.
+This analysis suggests that a unit increase in vaccinations equates to a 16.98 increase in deaths.
 
-However, the p-value of 0.012 suggests that I can reject the null hypothesis.
+However, the p-value of 0.002 suggests that I can reject the null hypothesis.
 
-This contradictory evidence supports looking at other factors for analysis.
+This contradictory evidence supports looking at other factors for analysis.  A low r-squared value of 0.079 suggests that other factors are affecting death rates.
 
 ## Additional Analysis
 
 I looked next to identify correlations between other factors related to covid deaths.
 
-In full:
+In full for reference:
 
 ![Alt text](<images\Correlation Matrix Full.png>)
 
-Reduced to relevent data fields. 
+Reduced to relevent data fields: 
 
 ![Alt text](<images\Correlation Matrix Narrowed.png>)
 
