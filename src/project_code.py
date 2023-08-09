@@ -49,108 +49,121 @@ def load_data():
     several NaN values and so some columns are best considered taking a total value
     from the column, which will be done with later data.  Otherwise, filtered_df can 
     be used to consider data from a specific range of time
+
+    narrow_df returns a more focused analysis of the data looking at the below columns
+    and taken as a total value and not a value which changes over time
     """
 
-    return filtered_df
+    narrow_df = main_df.groupby('location_x').agg({
+    'total_deaths_per_million': max,
+    'people_fully_vaccinated_per_hundred': max,
+    'extreme_poverty': max,
+    'aged_65_older': max,
+    'aged_70_older': max,
+    'gdp_per_capita': max,
+    'life_expectancy': max,
+    'human_development_index': max,
+    'median_age': max
+    })
 
-
-
-# def visualize_new_cases_weekly_average(filtered_df):
-
-#     """
-#     This code will visualize initial stage of EDA which plots the new_cases_smoothed_per_million
-#     column for the desired countries.  Countries of interest and desired column can be modified
-#     here to adjust EDA.
-#     """
-
-#     # Convert 'date' column to datetime format
-#     filtered_df['date'] = pd.to_datetime(filtered_df['date_x'])  
+    return filtered_df, narrow_df
     
-#     # Can be altered to change what it plotted
-#     column_to_plot = 'new_cases_smoothed_per_million'
+def visualize_new_cases_weekly_average(filtered_df):
 
-#     countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
+    """
+    This code will visualize initial stage of EDA which plots the new_cases_smoothed_per_million
+    column for the desired countries.  Countries of interest and desired column can be modified
+    here to adjust EDA.
+    """
+
+    # Convert 'date' column to datetime format
+    filtered_df['date'] = pd.to_datetime(filtered_df['date_x'])  
     
-#     # Set 'date' as the DataFrame's index
-#     filtered_df = filtered_df.set_index('date')  
+    # Can be altered to change what it plotted
+    column_to_plot = 'new_cases_smoothed_per_million'
 
-#     for country in countries_of_interest:
-#         country_data = filtered_df[filtered_df['location_x'] == country]
-#         plt.plot(country_data.index, country_data[column_to_plot], label=country)
+    countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
+    
+    # Set 'date' as the DataFrame's index
+    filtered_df = filtered_df.set_index('date')  
 
-#     # Set plot title and labels
-#     plt.title('New Cases per Million Weekly Average')
-#     plt.xlabel('Date')
-#     plt.ylabel('New Cases per Million')
+    for country in countries_of_interest:
+        country_data = filtered_df[filtered_df['location_x'] == country]
+        plt.plot(country_data.index, country_data[column_to_plot], label=country)
 
-#     # Customize the x-axis tick labels to show every week
-#     plt.gca().xaxis.set_major_locator(plt.MaxNLocator(15))  # Max 20 tick labels on the x-axis
+    # Set plot title and labels
+    plt.title('New Cases per Million Weekly Average')
+    plt.xlabel('Date')
+    plt.ylabel('New Cases per Million')
 
-#     # Rotate the x-axis tick labels for better visibility
-#     plt.xticks(rotation=45)
+    # Customize the x-axis tick labels to show every week
+    plt.gca().xaxis.set_major_locator(plt.MaxNLocator(15))  # Max 20 tick labels on the x-axis
 
-#     # Add a legend to distinguish the lines
-#     plt.legend()
+    # Rotate the x-axis tick labels for better visibility
+    plt.xticks(rotation=45)
 
-#     # Show the plot
-#     plt.tight_layout()
-#     plt.show()
+    # Add a legend to distinguish the lines
+    plt.legend()
 
-# def visualize_new_deaths_per_million_weekly(filtered_df):
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
 
-#     #Setting up another variable here allows me to create a new visualization without breaking previous code
-#     column_to_plot_a = 'new_deaths_smoothed_per_million'
-#     countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
+def visualize_new_deaths_per_million_weekly(filtered_df):
 
-#     for country in countries_of_interest:
-#         country_data = filtered_df[filtered_df['location_x'] == country]
-#         plt.plot(country_data.index, country_data[column_to_plot_a], label=country)
+    #Setting up another variable here allows me to create a new visualization without breaking previous code
+    column_to_plot_a = 'new_deaths_smoothed_per_million'
+    countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
 
-#     # Set plot title and labels
-#     plt.title('New Deaths per Million Weekly Average')
-#     plt.xlabel('Date')
-#     plt.ylabel('New Deaths per Million')
+    for country in countries_of_interest:
+        country_data = filtered_df[filtered_df['location_x'] == country]
+        plt.plot(country_data.index, country_data[column_to_plot_a], label=country)
 
-#     # Customize the x-axis tick labels to show every week
-#     plt.gca().xaxis.set_major_locator(plt.MaxNLocator(15))  # Max 20 tick labels on the x-axis
+    # Set plot title and labels
+    plt.title('New Deaths per Million Weekly Average')
+    plt.xlabel('Date')
+    plt.ylabel('New Deaths per Million')
 
-#     # Rotate the x-axis tick labels for better visibility
-#     plt.xticks(rotation=45)
+    # Customize the x-axis tick labels to show every week
+    plt.gca().xaxis.set_major_locator(plt.MaxNLocator(15))  # Max 20 tick labels on the x-axis
 
-#     # Add a legend to distinguish the lines
-#     plt.legend()
+    # Rotate the x-axis tick labels for better visibility
+    plt.xticks(rotation=45)
 
-#     # Show the plot
-#     plt.tight_layout()
-#     plt.show()
+    # Add a legend to distinguish the lines
+    plt.legend()
 
-# def visualize_people_fully_vaccinated_percent(filtered_df):
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
 
-#     #Setting up another variable here allows me to create a new visualization without breaking previous code
-#     column_to_plot_b = 'people_fully_vaccinated_per_hundred'
-#     countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
+def visualize_people_fully_vaccinated_percent(filtered_df):
 
-#     for country in countries_of_interest:
-#         country_data = filtered_df[filtered_df['location_x'] == country]
-#         plt.plot(country_data.index, country_data[column_to_plot_b], label=country)
+    #Setting up another variable here allows me to create a new visualization without breaking previous code
+    column_to_plot_b = 'people_fully_vaccinated_per_hundred'
+    countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
 
-#     # Set plot title and labels
-#     plt.title('People Fully Vaccinated Percent')
-#     plt.xlabel('Date')
-#     plt.ylabel('Vaccinated Percent')
+    for country in countries_of_interest:
+        country_data = filtered_df[filtered_df['location_x'] == country]
+        plt.plot(country_data.index, country_data[column_to_plot_b], label=country)
 
-#     # Customize the x-axis tick labels to show every week
-#     plt.gca().xaxis.set_major_locator(plt.MaxNLocator(15))  # Max 20 tick labels on the x-axis
+    # Set plot title and labels
+    plt.title('People Fully Vaccinated Percent')
+    plt.xlabel('Date')
+    plt.ylabel('Vaccinated Percent')
 
-#     # Rotate the x-axis tick labels for better visibility
-#     plt.xticks(rotation=45)
+    # Customize the x-axis tick labels to show every week
+    plt.gca().xaxis.set_major_locator(plt.MaxNLocator(15))  # Max 20 tick labels on the x-axis
 
-#     # Add a legend to distinguish the lines
-#     plt.legend()
+    # Rotate the x-axis tick labels for better visibility
+    plt.xticks(rotation=45)
 
-#     # Show the plot
-#     plt.tight_layout()
-#     plt.show()
+    # Add a legend to distinguish the lines
+    plt.legend()
+
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
 
 def narrow_dataframe(filtered_df):
 
@@ -200,10 +213,93 @@ def correlation_matrix(narrow_df):
     plt.title('Correlation Matrix')
     plt.show()
 
+def deaths_per_million_v_vaccinated_percent_of_population(narrow_df):
+
+    # Create the scatter plot
+    plt.figure(figsize=(8, 6))
+
+    sns.regplot(x='people_fully_vaccinated_per_hundred', y='total_deaths_per_million', data=narrow_df, scatter_kws={'alpha': 0.5})
+    plt.title(f'Total Deaths Per Million vs Vaccinated Percent of Population')
+    plt.xlabel('Vaccinated Percent of Population')
+    plt.ylabel('Total Deaths Per Million')
+    plt.grid(True)
+    plt.show()
+
+def lr_by_total_deaths_per_million(narrow_df):
+
+    columns_to_compare_a = ['people_fully_vaccinated_per_hundred', 'extreme_poverty', 'aged_65_older', 'aged_70_older',
+                      'gdp_per_capita', 'life_expectancy', 'human_development_index', 'median_age']
+
+
+    for column in columns_to_compare_a:
+        plt.figure(figsize=(8, 6))
+        sns.regplot(x=column, y='total_deaths_per_million', data=narrow_df, scatter_kws={'alpha': 0.5})
+        plt.title(f'Total Deaths Per Million vs {column}')
+        plt.xlabel(column)
+        plt.ylabel('Total Deaths Per Million')
+        plt.grid(True)
+        plt.show()
+
+def lr_by_percent_fully_vaccinated(narrow_df):
+
+    columns_to_compare_a = ['people_fully_vaccinated_per_hundred', 'extreme_poverty', 'aged_65_older', 'aged_70_older',
+                      'gdp_per_capita', 'life_expectancy', 'human_development_index', 'median_age']
+
+
+    for column in columns_to_compare_a:
+        plt.figure(figsize=(8, 6))
+        sns.regplot(x=column, y='people_fully_vaccinated_per_hundred', data=narrow_df, scatter_kws={'alpha': 0.5})
+        plt.title(f'Percent Fully Vaccinated vs {column}')
+        plt.xlabel(column)
+        plt.ylabel('Percent Fully Vaccinated')
+        plt.grid(True)
+        plt.show()
+
+def data_single_testing(narrow_df):
+
+    testing_df = narrow_df.dropna()
+
+    x = testing_df['people_fully_vaccinated_per_hundred']
+    y = testing_df['total_deaths_per_million']
+
+    # Add a constant column to X for the intercept term in the model
+    X = sm.add_constant(X)
+
+    # Fit the linear regression model
+    model = sm.OLS(y, X).fit()
+
+    # Print the summary of the model
+    print(model.summary())
+
+def data_multiple_testing(narrow_df):
+
+    testing_df = narrow_df.dropna()
+
+    dependent_variable = 'total_deaths_per_million'
+    independent_variables = ['gdp_per_capita', 'median_age', 'human_development_index', 'life_expectancy', 'aged_65_older', 'extreme_poverty', 'people_fully_vaccinated_per_hundred']
+
+    # Add a constant term for the intercept in the regression model
+    testing_df['constant'] = 1
+
+    # Define the dependent variable and independent variables
+    X = testing_df[['constant'] + independent_variables]
+    y = testing_df[dependent_variable]
+
+    # Perform the multiple linear regression
+    model = sm.OLS(y, X).fit()
+
+    # Print the summary of the regression results
+    print(model.summary())
+
 def main():
 
     # Call load_data function
-    filtered_df = load_data()
+    """
+    All defined functions follow below:
+    """
+    #filtered_df = load_data()
+
+    #narrow_df = 
 
     #visualize_new_cases_weekly_average(filtered_df)
 
@@ -215,8 +311,15 @@ def main():
 
     #correlation_matrix(narrow_df)
 
-# Continue to work here, add testing and remaining plots
+    #deaths_per_million_v_vaccinated_percent_of_population(narrow_df)
 
+    #lr_by_total_deaths_per_million(narrow_df)
+
+    #lr_by_percent_fully_vaccinated(narrow_df)
+
+    #data_single_testing(narrow_df)
+
+    #data_mulitple_testing(narrow_df)
 
     
 if __name__ == '__main__':

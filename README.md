@@ -13,11 +13,11 @@ Data set provides information from 1/3/2020 to 4/12/2023 grouped by country abou
 Conducted EDA trying to gain a sense of which countries performed worse in the covid
 pandemic based upon new cases smoothed per million.  "Smoothed" means a seven day average.  From the data set this allowed me to use a weekly average to calculate the intensity of new infections.  
 
-![Alt text](<images\New Cases Per Million.png>)
+![Alt text](<images\New Cases Per Million5.png>)
 
 This plot shows the severe spike in China following the reopening in late 2022 in addition to seasonal spikes in other parts of the world.  But infections are now the whole story, so I looked also at rate of deaths to identify significant comparisons.
 
-![Alt text](<images\New Deaths Per Millionj.png>)
+![Alt text](<images\New Deaths Per Million5.png>)
 
 This plot shows a more complicated picture and I decided to look for correlations given the available data to find relationships between the total number of deaths per million and other indicators.  Here I build my initial hypothesis.
 
