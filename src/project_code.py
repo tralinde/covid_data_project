@@ -6,14 +6,38 @@ from scipy.stats import linregress
 
 def load_data():
 
-    # This code provides the starting point for EDA and testing by combining data
-    # and presenting it for use
-        
+    """
+    This code provides the starting point for EDA and testing by combining
+    2 .csv files for covid deaths and covid vaccines into a single dataframe
+
+    "main_df" contains the entire data including some redundant duplicates of the
+    data, but can be a starting point for building other dataframes
+    
+    "filtered_df" will provide information for the selected countries indexed by the date.  
+    This means that all date is included from 1/3/2020 to 4/12/2023.  This contains
+    several NaN values and so some columns are best considered taking a total value
+    from the column, which will be done with later data.  Otherwise, filtered_df can 
+    be used to consider data from a specific range of time
+
+    "narrow_df" returns a more focused analysis of the data looking at the 
+    below columns and taken as a total value and not a value which changes 
+    over time
+
+    Any modifications to the desired data should be made at this initial step
+
+    """
+
     df_deaths = pd.read_csv('data/COVID DEATHS.csv')
     df_vaccines = pd.read_csv('data/COVID_VACCINATIONS.csv')
 
     merged_df = pd.merge(df_deaths, df_vaccines, left_index=True, right_index=True)
 
+    """
+    To focus the scope of the DF I have chosen to drop the following columns
+    to to being either a duplicate column in the merging or not considered as part
+    of my analysis
+    """
+    
     columns_to_drop = ['iso_code_y', 'continent_y', 'location_y', 'date_y',
     'total_cases', 'new_cases', 'new_deaths',
     'total_cases_per_million', 'new_cases_per_million',
@@ -31,7 +55,7 @@ def load_data():
 
     main_df = merged_df.drop(columns = columns_to_drop).copy()
 
-    #Specify the countries to be considered for any analysis
+    #Specify the countries to be considered for any analysis in "filtered_df"
 
     countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
     
@@ -39,20 +63,9 @@ def load_data():
 
     filtered_df = main_df[main_df['location_x'].isin(countries_of_interest)].copy()
 
-    # Convert 'date' column to datetime format
+    # Convert 'date' column to datetime format simplifies making line charts over time
     filtered_df.loc[:, 'date'] = pd.to_datetime(filtered_df['date_x']) 
     filtered_df = filtered_df.set_index('date')
-
-    """
-    filtered_df will provide information for the selected countries indexed by the date.  
-    This means that all date is included from 1/3/2020 to 4/12/2023.  This contains
-    several NaN values and so some columns are best considered taking a total value
-    from the column, which will be done with later data.  Otherwise, filtered_df can 
-    be used to consider data from a specific range of time
-
-    narrow_df returns a more focused analysis of the data looking at the below columns
-    and taken as a total value and not a value which changes over time
-    """
 
     narrow_df = main_df.groupby('location_x').agg({
     'total_deaths_per_million': max,
@@ -71,9 +84,15 @@ def load_data():
 def visualize_new_cases_weekly_average(filtered_df):
 
     """
-    This code will visualize initial stage of EDA which plots the new_cases_smoothed_per_million
-    column for the desired countries.  Countries of interest and desired column can be modified
+    This code will visualize initial stage of EDA which plots the 
+    new_cases_smoothed_per_million column for the desired countries.  
+    Countries of interest and desired column can be modified
     here to adjust EDA.
+
+    input: "filtered_df"
+
+    returns: visualization of new cases (smoothed) to show fluctuations in the 
+    intensity of virus spread in the countries_of_interest
     """
 
     # Convert 'date' column to datetime format
@@ -111,6 +130,19 @@ def visualize_new_cases_weekly_average(filtered_df):
 
 def visualize_new_deaths_per_million_weekly(filtered_df):
 
+    """
+    This code will visualize new deaths per million (smoothed)
+    column for the desired countries.  Countries of interest and 
+    desired column can be modified here to adjust EDA.
+
+    input: "filtered_df"
+
+    returns: visualization of new deaths per million to show fluctuations in the 
+    death rate in the countries_of_interest over time
+
+    countries_of_interest can be modified below
+    """
+    
     #Setting up another variable here allows me to create a new visualization without breaking previous code
     column_to_plot_a = 'new_deaths_smoothed_per_million'
     countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
@@ -139,6 +171,16 @@ def visualize_new_deaths_per_million_weekly(filtered_df):
 
 def visualize_people_fully_vaccinated_percent(filtered_df):
 
+    """
+    This code will visualize the percent of the population vaccinated as 
+    reported over time
+
+    input: filtered_df
+
+    returns: line chart of how vaccinated percent of the population grows
+    over time in the countries_of_interest
+    """
+
     #Setting up another variable here allows me to create a new visualization without breaking previous code
     column_to_plot_b = 'people_fully_vaccinated_per_hundred'
     countries_of_interest = ['Brazil', 'China', 'United States', 'Russia', 'India']
@@ -165,46 +207,16 @@ def visualize_people_fully_vaccinated_percent(filtered_df):
     plt.tight_layout()
     plt.show()
 
-def narrow_dataframe(filtered_df):
-
-    df_deaths = pd.read_csv('data/COVID DEATHS.csv')
-    df_vaccines = pd.read_csv('data/COVID_VACCINATIONS.csv')
-
-    merged_df = pd.merge(df_deaths, df_vaccines, left_index=True, right_index=True)
-
-    columns_to_drop = ['iso_code_y', 'continent_y', 'location_y', 'date_y',
-    'total_cases', 'new_cases', 'new_deaths',
-    'total_cases_per_million', 'new_cases_per_million',
-    'new_deaths_per_million',
-    'icu_patients', 'hosp_patients', 'weekly_icu_admissions', 'weekly_hosp_admissions',
-    'total_tests', 'new_tests', 'total_tests_per_thousand', 'new_tests_per_thousand',
-    'new_tests_smoothed', 'new_tests_smoothed_per_thousand',
-    'positive_rate', 'tests_per_case', 'tests_units',
-    'total_boosters', 'new_vaccinations', 'new_vaccinations_smoothed',
-    'total_vaccinations_per_hundred', 'people_vaccinated_per_hundred',
-    'total_boosters_per_hundred', 'new_vaccinations_smoothed_per_million',
-    'new_people_vaccinated_smoothed', 'new_people_vaccinated_smoothed_per_hundred',
-    'stringency_index', 'handwashing_facilities',
-    'excess_mortality_cumulative_absolute', 'excess_mortality_cumulative']
-
-    main_df = merged_df.drop(columns = columns_to_drop).copy()
-    
-    narrow_df = main_df.groupby('location_x').agg({
-    'total_deaths_per_million': max,
-    'people_fully_vaccinated_per_hundred': max,
-    'extreme_poverty': max,
-    'aged_65_older': max,
-    'aged_70_older': max,
-    'gdp_per_capita': max,
-    'life_expectancy': max,
-    'human_development_index': max,
-    'median_age': max
-    })
-
-    return narrow_df
-
 def correlation_matrix(narrow_df):
 
+    """
+    This code will build a seaborn correlation matrix  of all columns in "narrow_df"
+
+    input: DF (narrow_df)
+
+    output: Correlation matrix
+    """
+    
     correlation_matrix = narrow_df.corr()
 
     # Create a heatmap to visualize the correlation matrix
@@ -215,6 +227,19 @@ def correlation_matrix(narrow_df):
 
 def deaths_per_million_v_vaccinated_percent_of_population(narrow_df):
 
+    """
+    This code creates a LR chart of vaccinated percent of population v 
+    total_deaths_per million
+
+    Note: using narrow_df because this requires a single number and not a reading
+    over time
+
+    input: "narrow_df"
+
+    output: Single plot which shows LR line and correlation between vaccination
+    percentage of a country vs its total covid deaths
+    """
+    
     # Create the scatter plot
     plt.figure(figsize=(8, 6))
 
@@ -227,6 +252,15 @@ def deaths_per_million_v_vaccinated_percent_of_population(narrow_df):
 
 def lr_by_total_deaths_per_million(narrow_df):
 
+    """
+    This code creates multiple LR charts comparing total deaths per million with
+    the columns specified below
+
+    input: "narrow_df"
+
+    output: 8 scatter plots including LR line
+    """
+    
     columns_to_compare_a = ['people_fully_vaccinated_per_hundred', 'extreme_poverty', 'aged_65_older', 'aged_70_older',
                       'gdp_per_capita', 'life_expectancy', 'human_development_index', 'median_age']
 
@@ -242,6 +276,16 @@ def lr_by_total_deaths_per_million(narrow_df):
 
 def lr_by_percent_fully_vaccinated(narrow_df):
 
+    """
+    This code creates multiple LR charts comparing percent fully vaccinated by
+    country with
+    the columns specified below
+
+    input: "narrow_df"
+
+    output: 8 scatter plots including LR line
+    """
+
     columns_to_compare_a = ['people_fully_vaccinated_per_hundred', 'extreme_poverty', 'aged_65_older', 'aged_70_older',
                       'gdp_per_capita', 'life_expectancy', 'human_development_index', 'median_age']
 
@@ -256,6 +300,14 @@ def lr_by_percent_fully_vaccinated(narrow_df):
         plt.show()
 
 def data_single_testing(narrow_df):
+    """
+    Conducts single variable LR tests using people_fully_vaccinated_per_hundred
+
+    inputs: "narrow_df"- cleaned to show aggregate or sum values and not 
+    values over time
+
+    returns: (and prints) model
+    """
 
     testing_df = narrow_df.dropna()
 
@@ -270,9 +322,18 @@ def data_single_testing(narrow_df):
 
     # Print the summary of the model
     print(model.summary())
+    return model
 
 def data_multiple_testing(narrow_df):
+    """
+    Conducts multiple variable LR tests using gdp, median age, HDI, life expectancy, 
+    aged 65 or older, extreme poverty, and people fully vaccinated to test 
+    against death rates (per million)
 
+    inputs: "narrow_df"- cleaned to show aggregate or sum values and not values over time
+
+    returns: (and prints) model
+    """
     testing_df = narrow_df.dropna()
 
     dependent_variable = 'total_deaths_per_million'
@@ -290,6 +351,7 @@ def data_multiple_testing(narrow_df):
 
     # Print the summary of the regression results
     print(model.summary())
+    return model
 
 def main():
 
